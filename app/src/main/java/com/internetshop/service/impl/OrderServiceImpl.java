@@ -216,12 +216,12 @@ public class OrderServiceImpl implements OrderService {
                         "Dice Games, New order",
                         "order.txt");
 
-                if (client.getPhone() != null) {
-                    mailService.sendSMS("Dear, " + client.getName() +
-                                    " , your order status is " +
-                                    orderEntity.getStatus().getName() + ". Order ID: " + orderEntity.getId(),
-                            client.getPhone());
-                }
+//                if (client.getPhone() != null) {
+//                    mailService.sendSMS("Dear, " + client.getName() +
+//                                    " , your order status is " +
+//                                    orderEntity.getStatus().getName() + ". Order ID: " + orderEntity.getId(),
+//                            client.getPhone());
+//                }
                 if (orderEntity.getStatus().getName().equals("canceled")) {
                     for (CartItem item : getAllCartItemsFromOrderByOrderId(orderEntity.getId())) {
                         GoodsEntity goodsEntity = goodsRepository.getGoodsById(item.getGoods().getId());
@@ -349,9 +349,9 @@ public class OrderServiceImpl implements OrderService {
                 "Dice Games, new order",
                 "order.txt");
 
-        if (client.getPhone() != null) {
-            mailService.sendSMS("Your order ID: " + id + " DiceGames.com", client.getPhone());
-        }
+//        if (client.getPhone() != null) {
+//            mailService.sendSMS("Your order ID: " + id + " DiceGames.com", client.getPhone());
+//        }
     }
 
     /**

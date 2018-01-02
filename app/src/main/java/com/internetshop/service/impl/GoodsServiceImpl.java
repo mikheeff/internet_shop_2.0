@@ -2,7 +2,6 @@ package com.internetshop.service.impl;
 
 import com.internetshop.controller.GoodsController;
 import com.internetshop.entities.*;
-import com.internetshop.jms.JmsProducer;
 import com.internetshop.model.*;
 import com.internetshop.repository.api.ClientRepository;
 import com.internetshop.repository.api.GoodsRepository;
@@ -27,14 +26,12 @@ public class GoodsServiceImpl implements GoodsService {
     private final ClientRepository clientRepository;
     private final ClientService clientService;
     private static Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class.getName());
-    private final JmsProducer producer;
 
     @Autowired
-    public GoodsServiceImpl(GoodsRepository goodsRepository, ClientRepository clientRepository, ClientService clientService, JmsProducer jmsProducer) {
+    public GoodsServiceImpl(GoodsRepository goodsRepository, ClientRepository clientRepository, ClientService clientService) {
         this.goodsRepository = goodsRepository;
         this.clientRepository = clientRepository;
         this.clientService = clientService;
-        this.producer = jmsProducer;
     }
 
     /**
@@ -191,7 +188,6 @@ public class GoodsServiceImpl implements GoodsService {
         smallGoods.setVisible(goods.getVisible());
 
         Event event = new AddEvent(smallGoods);
-        sendMessage(event);
     }
 
     /**
@@ -237,20 +233,9 @@ public class GoodsServiceImpl implements GoodsService {
     public void deleteGoodsById(int id) {
         logger.info("deleteGoodsById {}",id);
         this.goodsRepository.deleteGoodsById(id);
-        createDeleteMessage(id);
     }
 
-    public void createDeleteMessage(int id) {
-        Event event = new DeleteEvent(id);
-        sendMessage(event);
-    }
 
-    public void sendMessage(Event event) {
-        if (!producer.isAlive()) {
-            producer.start();
-        }
-        producer.send(event);
-    }
 
     /**
      * Get goods by selected id
@@ -326,7 +311,6 @@ public class GoodsServiceImpl implements GoodsService {
         smallGoods.setSalesCounter(goods.getSalesCounter());
         smallGoods.setVisible(goods.getVisible());
         Event event = new UpdateEvent(smallGoods);
-        sendMessage(event);
     }
 
 
